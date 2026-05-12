@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use App\Services\TodoService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TodoCreatedForUser;
+use App\Mail\TodoCreatedForAdmin;
+use App\Notifications\TodoCreatedNotification;
+use Illuminate\Bus\Queueable;
 
 class TodoController extends Controller
 {
+    use Queueable;
+
     private TodoService $todoService;
 
     public function __construct(TodoService $todoService)
@@ -30,21 +38,30 @@ class TodoController extends Controller
         return view('todos.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'is_done' => ['nullable', 'boolean'],
         ]);
 
-        $request->user()
+        $todo = $request->user()
             ->todos()
             ->create($validated);
 
+        $todo->load('user');
+
+        Mail::to('admin@example.com')
+            ->queue(new TodoCreatedForAdmin($todo));
+            
+        Mail::to($todo->user->email)
+            ->queue(new TodoCreatedForUser($todo));
+
+        $todo->user->notify(new TodoCreatedNotification($todo));
+
         return redirect()
             ->route('todos.index')
-            ->with('success', 'Todoを作成しました。');
+            ->with('success', 'Todoを作成し、通知を送信しました。');
     }
 
     public function edit(Todo $todo)

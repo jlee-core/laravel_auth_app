@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    
+    'admin' => [
+        'mail_address' => env('ADMIN_MAIL_ADDRESS', 'admin@example.com'),
+    ],
 
 ];
