@@ -42,7 +42,7 @@ class TodoController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'body' => ['nullable', 'string'],
         ]);
 
         $todo = $request->user()

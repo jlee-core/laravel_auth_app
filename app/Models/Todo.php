@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Todo extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'body',
         'is_done',
@@ -16,5 +17,12 @@ class Todo extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_done' => 'boolean',
+        ];
     }
 }
