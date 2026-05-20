@@ -24,6 +24,12 @@
         <a href="{{ route('admin.dashboard') }}">管理画面</a>
         @endcan
 
+        <a href="{{ route('contact') }}">お問い合わせフォーム</a>
+
+        <a href="{{ route('notifications.index') }}">通知一覧</a>
+
+        <a href="{{ route('notify') }}">通知テスト</a>
+
         <flux:spacer />
 
         <flux:sidebar.nav>
