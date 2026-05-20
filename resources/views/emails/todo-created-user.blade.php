@@ -9,7 +9,7 @@
 
 ## 詳細
 
-{{ $todo->description ?? '詳細はありません。' }}
+{{ $todo->body ?? '詳細はありません。' }}
 
 <x-mail::button :url="route('todos.index')">
 Todo一覧を確認する
